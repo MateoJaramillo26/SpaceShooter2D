@@ -8,8 +8,16 @@ public class NaveEspacial : MonoBehaviour
     [SerializeField] public float tiempoDesdeUltimoDisparo = 0f;
     [SerializeField] public float tiempoEntreDisparos = 0.5f;
     public float velocidad = 5f; // Velocidad de movimiento
+    public float velocidadBala = 10f; // Velocidad de la bala
 
-    // Update is called once per frame
+    private ScoreController scoreController; // Referencia al ScoreController
+
+    void Start()
+    {
+        // Obtener el componente ScoreController del objeto de la escena
+        scoreController = FindObjectOfType<ScoreController>();
+    }
+
     void Update()
     {
         MoverNave();
@@ -18,12 +26,12 @@ public class NaveEspacial : MonoBehaviour
 
     void MoverNave()
     {
-        // Obtener entrada del usuario
+        // Obtener entrada del usuario con teclas invertidas
         float movimientoHorizontal = Input.GetAxis("Horizontal");
         float movimientoVertical = Input.GetAxis("Vertical");
 
         // Crear un vector de movimiento basado en la entrada
-        Vector2 movimiento = new Vector2(movimientoHorizontal, movimientoVertical);
+        Vector3 movimiento = new Vector3(movimientoHorizontal, movimientoVertical, 0);
 
         // Mover la nave
         transform.Translate(movimiento * velocidad * Time.deltaTime);
@@ -34,18 +42,24 @@ public class NaveEspacial : MonoBehaviour
         // Aumenta el tiempo desde el último disparo
         tiempoDesdeUltimoDisparo += Time.deltaTime;
 
-        // Comprueba si el jugador presiona la tecla de disparo (barra espaciadora)
+        // Comprueba si el jugador presiona la tecla de disparo (barra espaciadora) y si ha pasado el tiempo necesario entre disparos
         if (Input.GetKeyDown(KeyCode.Space) && tiempoDesdeUltimoDisparo >= tiempoEntreDisparos)
         {
             // Resetea el temporizador de disparo
             tiempoDesdeUltimoDisparo = 0f;
 
             // Crear la bala en la posición de la nave
-            GameObject bala = Instantiate(balaPrefab, transform.position, Quaternion.identity);
+            GameObject bala = Instantiate(balaPrefab, transform.position, transform.rotation);
 
-            // Obtener el Rigidbody2D de la bala y aplicar velocidad
-            Rigidbody2D rb = bala.GetComponent<Rigidbody2D>();
-            rb.velocity = transform.up * 10f; // Ajusta la velocidad de la bala según tus necesidades
+            // Obtener el componente Rigidbody de la bala y aplicarle una velocidad en dirección contraria
+            Rigidbody2D rbBala = bala.GetComponent<Rigidbody2D>();
+            if (rbBala != null)
+            {
+                rbBala.velocity = transform.up * velocidadBala; // La bala se moverá en la dirección opuesta
+            }
+
         }
     }
+
+
 }

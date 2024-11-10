@@ -10,7 +10,7 @@ public class Bala : MonoBehaviour
     void Start()
     {
         // Destruir la bala después de 5 segundos si no ha colisionado
-        Destroy(gameObject, 5f);
+        Destroy(gameObject, 2f);
     }
 
     // Update is called once per frame
@@ -19,11 +19,4 @@ public class Bala : MonoBehaviour
         // Mover la bala hacia adelante
         transform.Translate(Vector2.down * velocidad * Time.deltaTime);
     }
-    // Método para manejar la detección de triggers
-    /*private void OnTriggerEnter2D(Collider2D col)
-    
-    // Puedes añadir lógica aquí si deseas manejar colisiones con ciertos objetos
-    Destroy(gameObject); // Destruir la bala al activar el trigger
-    }*/
-
 }
